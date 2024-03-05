@@ -2,6 +2,7 @@
 //! Use with [Client::create_chat](crate::Client::create_chat) or [Client::create_chat_stream](crate::Client::create_chat_stream).
 
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
 /// Request arguments for chat completion.
 ///
@@ -67,12 +68,18 @@ pub struct ChatArguments {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub frequency_penalty: Option<f32>,
 
+
+    /// The desired format for the response. Added for JSON mode
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub response_format: Option<serde_json::Value>,
+
     // logit_bias
     /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
     /// [Learn more](https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<String>,
 }
+
 
 impl ChatArguments {
     pub fn new(model: impl AsRef<str>, messages: Vec<Message>) -> ChatArguments {
@@ -87,6 +94,24 @@ impl ChatArguments {
             max_tokens: None,
             presence_penalty: None,
             frequency_penalty: None,
+            response_format: None,
+            user: None,
+        }
+    }
+    
+    pub fn new_json(messages: Vec<Message>) -> ChatArguments {
+        ChatArguments {
+            model: "gpt-4-turbo-preview".to_string(),
+            messages,
+            temperature: Some(0.15),
+            top_p: None,
+            n: None,
+            stream: None,
+            stop: None,
+            max_tokens: None,
+            presence_penalty: None,
+            frequency_penalty: None,
+            response_format: Some(json!({"type": "json_object"})),
             user: None,
         }
     }
