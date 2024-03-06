@@ -80,7 +80,6 @@ pub struct ChatArguments {
     pub user: Option<String>,
 }
 
-
 impl ChatArguments {
     pub fn new(model: impl AsRef<str>, messages: Vec<Message>) -> ChatArguments {
         ChatArguments {
@@ -99,9 +98,9 @@ impl ChatArguments {
         }
     }
     
-    pub fn new_json(messages: Vec<Message>) -> ChatArguments {
+    pub fn new_json(messages: Vec<Message>, model: String) -> ChatArguments {
         ChatArguments {
-            model: "gpt-4-turbo-preview".to_string(),
+            model,
             messages,
             temperature: Some(0.15),
             top_p: None,
